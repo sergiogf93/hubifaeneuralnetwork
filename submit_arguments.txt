@@ -1,0 +1,17 @@
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 100 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 200 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 300 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 400 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 500 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 600 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 700 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 800 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 900 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 1000 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 2500 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 5000 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 7500 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 10000 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 25000 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 50000 200 Whad_vs_Znunu_StoB
+Datasets/Whad_TAR.pkl Datasets/Znunu_TAR.pkl monoW_vs_Znunu Whad Znunu 75000 200 Whad_vs_Znunu_StoB
