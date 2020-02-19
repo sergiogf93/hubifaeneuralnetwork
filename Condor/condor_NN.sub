@@ -1,0 +1,5 @@
+executable = launch_condor.sh
+output = condor/out/out-$(ClusterId).$(ProcId).out
+error = condor/err/err-$(ClusterId).$(ProcId).err
+log = condor/log/log-$(ClusterId).$(ProcId).log
+queue arguments from submit_arguments.txt
