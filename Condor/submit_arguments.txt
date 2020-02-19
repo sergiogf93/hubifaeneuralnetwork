@@ -1,0 +1,17 @@
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 50 2 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 2 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 10 2 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 5 2 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 1 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 3 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 4 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 5 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 1 0.01 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 1 0.005 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 1 0.001 0.6 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 200 20 1 0.001 0.8 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 512 200 20 1 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 256 200 20 1 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 2048 200 20 1 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 400 20 1 0.001 0.7 out_discriminantShape
+../ifaeneuralnetwork/Datasets/Whad_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl DiscrShape Whad Znunu 1024 100 20 1 0.001 0.7 out_discriminantShape

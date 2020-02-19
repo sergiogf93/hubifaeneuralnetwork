@@ -1,0 +1,8 @@
+../ifaeneuralnetwork/Datasets/Znunu_TAR_1stHalf.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR_2ndHalf.pkl BkgvsBkg Znunu Znunu 1024 200 20 4 0.001 0.7 out_bkgVSbkg
+../ifaeneuralnetwork/Datasets/Znunu_TAR_1stHalf.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR_2ndHalf.pkl BkgvsBkg Znunu Znunu 1024 200 50 2 0.001 0.7 out_bkgVSbkg
+../ifaeneuralnetwork/Datasets/Znunu_TAR_1stHalf.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR_2ndHalf.pkl BkgvsBkg Znunu Znunu 1024 200 20 2 0.001 0.7 out_bkgVSbkg
+../ifaeneuralnetwork/Datasets/Znunu_TAR_1stHalf.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR_2ndHalf.pkl BkgvsBkg Znunu Znunu 1024 200 20 2 0.005 0.8 out_bkgVSbkg
+../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl BkgvsBkg_SameSample Znunu Znunu 1024 200 50 2 0.001 0.8 out_bkgVSbkg
+../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl BkgvsBkg_SameSample Znunu Znunu 1024 200 20 2 0.005 0.8 out_bkgVSbkg
+../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl BkgvsBkg_SameSample Znunu Znunu 1024 200 20 2 0.005 0.7 out_bkgVSbkg
+../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl ../ifaeneuralnetwork/Datasets/Znunu_TAR.pkl BkgvsBkg_SameSample Znunu Znunu 1024 200 50 2 0.005 0.7 out_bkgVSbkg
