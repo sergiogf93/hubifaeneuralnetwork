@@ -145,12 +145,15 @@ parser.add_option("-x","--batch-size", dest="BatchSizeStart", help="Batch_size",
 parser.add_option("-e","--epochs", dest="epochs", help="Epochs", type='int', default=200)
 parser.add_option("--patience", dest="patience", help="Patience", type='int', default=10000)
 parser.add_option("--train-size", dest="train_size", help="train_size", type='float', default=0.7)
+parser.add_option("--nodes", dest="nodes", help="Nodes per layer", type='int', default=20)
+parser.add_option("--depth", dest="depth", help="Number of inner layers", type='int', default=2)
 
 parser.add_option("--do-plots", action="store_true", dest="do_plots", help="do variable plots" , default=False)
 parser.add_option("--lr", dest="LR", help="learning rate", type='float', default=0.001)
 parser.add_option("--batch-size-end", dest="BatchSizeEnd", help="Batch_size_end", type='int', default=-1)
 parser.add_option("--batch-size-step", dest="BatchSizeStep", help="Batch_size_step", type='int', default=-1)
 parser.add_option("--load-model", dest="load_model", help="Path to folder with the model to load", type="string", default="")
+parser.add_option("--bkg-vs-bkg",dest="doBkgVSBkg", help="Split the bkg pickle in two and use one it as signal", action="store_true", default=False)
 # parser.add_option("--signal-isnt-one", action="store_false", dest="sigIsntOne", help="Use 1 as isSignal for Signal", default=False)
 
 # parser.add_option("--plot_dir", dest="plot_dir", type='string', help='directory perfix to store plots', default="plots")
@@ -168,6 +171,7 @@ def DeepNeuralNetwork(options):
     signalDataset = pd.read_pickle(options.sigPkl)
     bkgDataset = pd.read_pickle(options.bkgPkl)
 
+<<<<<<< HEAD
     '''
     lim_inf = 400000 # if using this, discomment line 240 around the beginning of do-plots
     lim_sup = 800000
@@ -187,6 +191,13 @@ def DeepNeuralNetwork(options):
     # ----------------------------------------------------------------------------------------------------------------------------
     # ----------------------------------------------------------------------------------------------------------------------------
 
+=======
+    if options.doBkgVSBkg:
+        print "Doing a Bkg VS Bkg configuration"
+        Randomizing(bkgDataset)
+        signalDataset = bkgDataset.loc[0:bkgDataset.shape[0]/2]
+        bkgDataset = bkgDataset.loc[bkgDataset.shape[0]/2:]
+>>>>>>> 03d391376d7223261d9b07cd28a7546a6ff90eb3
 
     sum_sig = sum(signalDataset['weight'])
     sum_bkg = sum(bkgDataset['weight'])
@@ -335,6 +346,8 @@ def DeepNeuralNetwork(options):
     wskim=signal_and_background['weight']
     wskim_rescaled=signal_and_background['weight_rescaled']
 
+    print "Label for job: " + options.label
+
     if (options.load_model == ""):
 
         #Scale and format the inputs
@@ -361,8 +374,13 @@ def DeepNeuralNetwork(options):
         #Define the number of variables, the nodes per layer and the number of hidden layers
         n_dim=Xskim_train.shape[1]
         # n_nodes = int((n_dim+1)/2)
+<<<<<<< HEAD
         n_nodes = 50
         n_depth = 3 #usually 1
+=======
+        n_nodes = options.nodes
+        n_depth = options.depth
+>>>>>>> 03d391376d7223261d9b07cd28a7546a6ff90eb3
 
         #Build the model aka the neural network
         model=BuildDNN(n_dim,n_nodes,n_depth)
@@ -568,7 +586,7 @@ def main(options):
 
     for bs in bs_range:
         options.batch_size = bs
-        options.label = label + "_BS{}".format(bs)
+        options.label = label + "_BS%s_epochs%d_nodes%d_depth%d_LR%dpm_trainSize%d" %(bs, options.epochs, options.nodes, options.depth, options.LR*1000, options.train_size*100)
         out = DeepNeuralNetwork(options)
         S_to_B = out['S_to_B']
         perf = out['perf']
