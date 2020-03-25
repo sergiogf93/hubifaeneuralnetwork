@@ -1,4 +1,6 @@
 import sys
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -40,3 +42,4 @@ plt.ylabel(r"$S/\sqrt{B}$")
 plt.xlabel("batch size")
 plt.grid(True)
 plt.show()
+plt.savefig("test.png")

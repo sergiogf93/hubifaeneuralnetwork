@@ -5,7 +5,7 @@ echo $PWD
 #source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh
 #asetup 20.7.9.9.23,MCProd
 
-cd /nfs/pic.es/user/s/sgonzalez/scratch2/DL/hubifaeneuralnetwork
+cd /nfs/pic.es/user/b/bjorquer/scratch2/hubifaeneuralnetwork
 
 source conda_setup.sh
 conda activate base
@@ -22,6 +22,7 @@ depth=${9}
 learningRate=${10}
 trainSize=${11}
 fileOutput=${12}
+paramFile=${13} # same as the label
 
-python DeepNeuralNetwork.py -s ${signal_file} -b ${bkg_file} -l ${label} -w --SigName ${signal_name} --BkgName ${bkg_name} -x ${batch_size} -e ${epochs} -f ${fileOutput} --nodes ${nodes} --depth ${depth} --lr ${learningRate} --train-size ${trainSize} --do-plots
+python DeepNeuralNetwork.py -s ${signal_file} -b ${bkg_file} -l ${label} -w --SigName ${signal_name} --BkgName ${bkg_name} -x ${batch_size} -e ${epochs} --nodes ${nodes} --depth ${depth} --lr ${learningRate} --train-size ${trainSize} -f ${fileOutput} -p ${paramFile} --do-plots
 
