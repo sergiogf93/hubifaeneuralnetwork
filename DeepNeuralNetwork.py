@@ -28,7 +28,6 @@ import matplotlib.pyplot as plt
     
 import math as m    
 
-
 #****************************************
 #Adding Options when runing the code. 
 #****************************************
@@ -48,6 +47,7 @@ def BuildDNN(N_input,width,depth):
     model.add(Dropout(0.2))
 
     for i in xrange(0, depth):
+        # model.add(Dense(int(width/(2*(i+1)))))
         model.add(Dense(width))
         model.add(Activation('relu'))
         # Dropout randomly sets a fraction of input units to 0 at each update during training time
@@ -80,7 +80,7 @@ def weighted_selection(df,w,N):
         np.delete(indices,np.where(indices == i))
     return df.iloc[r]
         
-def integrateHist(n, bins, x0=None, x1=None):
+def integrateHist(n, bins, x0=None, x1=None): #important
     s = 0.
     if x0 == None:
         x0 = bins[0]
@@ -94,7 +94,7 @@ def integrateHist(n, bins, x0=None, x1=None):
 def weighted_avg(dataset, branch, selected_idx):
     return (dataset[branch].values[selected_idx] * dataset["weight"].values[selected_idx]).sum() / dataset["weight"].values[selected_idx].sum()
 
-def getTcut(n_sig, n_bkg, bins):
+def getTcut(n_sig, n_bkg, bins): #important
     alpha = np.cumsum(n_sig/len(bins))
     beta = 1 - np.cumsum(n_bkg/len(bins))
     signal_to_noise_ratio = []
@@ -138,13 +138,17 @@ parser.add_option('-f', '--file-name',
                   dest = "file_name",
                   type='string',
                   help='File to write the Signal to Background ratio in', default="SigToBKg")
+parser.add_option('-p', '--param-file',
+                  dest = "param_file",
+                  type='string',
+                  help='File to write all the parameters', default="NoFile")
 parser.add_option('-w', '--use-weights',
                   dest = "use_weights",
                   action="store_true",
                   help='Use weights when training', default=False)
 parser.add_option("-x","--batch-size", dest="BatchSizeStart", help="Batch_size", type='int', default=1024)
 parser.add_option("-e","--epochs", dest="epochs", help="Epochs", type='int', default=200)
-parser.add_option("--patience", dest="patience", help="Patience", type='int', default=30)
+parser.add_option("--patience", dest="patience", help="Patience", type='int', default=10000)
 parser.add_option("--train-size", dest="train_size", help="train_size", type='float', default=0.7)
 parser.add_option("--nodes", dest="nodes", help="Nodes per layer", type='int', default=20)
 parser.add_option("--depth", dest="depth", help="Number of inner layers", type='int', default=2)
@@ -166,15 +170,40 @@ parser.add_option("--bkg-vs-bkg",dest="doBkgVSBkg", help="Split the bkg pickle i
 # parser.add_option("-o", "--optimazer", dest="OPTIMAZER", help="optimazer used to minimaze loss function, See keras documentation", type='string', default='adam')
 (options, args) = parser.parse_args()
 
+
 def DeepNeuralNetwork(options):
+    
     signalDataset = pd.read_pickle(options.sigPkl)
     bkgDataset = pd.read_pickle(options.bkgPkl)
 
-    if options.doBkgVSBkg:
-        print "Doing a Bkg VS Bkg configuration"
-        Randomizing(bkgDataset)
-        signalDataset = bkgDataset.loc[0:bkgDataset.shape[0]/2]
-        bkgDataset = bkgDataset.loc[bkgDataset.shape[0]/2:]
+# <<<<<<< HEAD
+    '''
+    lim_inf = 400000 # if using this, discomment line 240 around the beginning of do-plots
+    lim_sup = 800000
+    signalDataset = signalDataset.loc[signalDataset['leading_jet_pt'] > lim_inf] # Only select rows with leading jet pT > lim_inf
+    signalDataset = signalDataset.loc[signalDataset['leading_jet_pt'] < lim_sup] # Only select rows with leading jet pT < lim_sup
+    bkgDataset = bkgDataset.loc[bkgDataset['leading_jet_pt'] > lim_inf] # Only select rows with leading jet pT > lim_inf
+    bkgDataset = bkgDataset.loc[bkgDataset['leading_jet_pt'] < lim_sup] # Only select rows with leading jet pT < lim_sup
+    '''
+    # only for bkg vs bkg (comment sigPkl line in options)
+    # rubbish = pd.read_pickle(options.sigPkl)
+    # sig_and_bkg = pd.read_pickle(options.bkgPkl)
+    # sig_and_bkg = sig_and_bkg.sample(frac=1) #to shuffle the DataFrame
+    # rows, columns = sig_and_bkg.shape
+    # signalDataset = sig_and_bkg[:int(rows/2)]
+    # bkgDataset = sig_and_bkg[int(rows/2):]
+    
+
+    # ----------------------------------------------------------------------------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------------------------------------
+
+# =======
+#     if options.doBkgVSBkg:
+#         print "Doing a Bkg VS Bkg configuration"
+#         Randomizing(bkgDataset)
+#         signalDataset = bkgDataset.loc[0:bkgDataset.shape[0]/2]
+#         bkgDataset = bkgDataset.loc[bkgDataset.shape[0]/2:]
+# >>>>>>> 03d391376d7223261d9b07cd28a7546a6ff90eb3
 
     sum_sig = sum(signalDataset['weight'])
     sum_bkg = sum(bkgDataset['weight'])
@@ -215,6 +244,8 @@ def DeepNeuralNetwork(options):
     InputFeatures = ['met_tst_et','leading_jet_pt', 'leading_jet_eta', 'leading_jet_phi',
                     'leading_jet_m', 'leading_jet_tau21', 'leading_jet_D2',
                     'leading_jet_C2', 'leading_jet_nConstit']
+    xLabel = ['Missing transverse energy (GeV)', 'Leading jet transverse momentum (GeV)', 'Leading jet rapidity', 'Leading jet phi',
+              'Leading jet mass (GeV)','Leading jet tau21', 'Leading jet D2', 'Leading jet C2', 'Leading jet constituents']
 
     if 'DeltaPhi' in InputFeatures:
         signalDataset['DeltaPhi'] = np.fabs(signalDataset['DeltaPhi'])
@@ -223,22 +254,71 @@ def DeepNeuralNetwork(options):
         signalDataset['DeltaPhi_for_minDeltaR'] = np.fabs(signalDataset['DeltaPhi_for_minDeltaR'])
         bkgDataset['DeltaPhi_for_minDeltaR'] = np.fabs(bkgDataset['DeltaPhi_for_minDeltaR'])
 
+    #plots with same binning
+
     if options.do_plots:
         os.system('mkdir -p Distributions/' + options.label)
-        for var in InputFeatures:
+        for var in range(len(InputFeatures)):
             #adopt a common binning scheme for all channels
-            bins = np.linspace(min(signalDataset[var]), max(signalDataset[var]) , 30)
+            bins = np.linspace(min(signalDataset[InputFeatures[var]]), max(signalDataset[InputFeatures[var]]) , 30)
+            #bins = np.linspace(lim_inf, lim_sup, 30)
+            if InputFeatures[var] == 'leading_jet_D2':
+                bins = np.linspace(0, 4 , 30)
             
-            plt.hist(signalDataset[var], weights=signalDataset['weight'], histtype='step', density=True, bins=bins, label=options.sigName, linewidth=2)
-            plt.hist(bkgDataset[var], weights=bkgDataset['weight'], histtype='step', density=True, bins=bins, label=options.bkgName, linewidth=2)
+            if InputFeatures[var] == 'met_tst_et' or InputFeatures[var] == 'leading_jet_pt' or InputFeatures[var] == 'leading_jet_m':
+                fig, ax = plt.subplots()
+                plt.hist(signalDataset[InputFeatures[var]], weights=signalDataset['weight'], histtype='step', density=True, bins=bins, label=options.sigName, linewidth=2)
+                plt.hist(bkgDataset[InputFeatures[var]], weights=bkgDataset['weight'], histtype='step', density=True, bins=bins, label=options.bkgName, linewidth=2)
             
-            plt.xlabel(var)
+                plt.xticks(ax.get_xticks(), ax.get_xticks()/1000)
+                plt.xlim(0, max(signalDataset[InputFeatures[var]]))
+                #plt.xlim(lim_inf, lim_sup)
+            else:
+                plt.hist(signalDataset[InputFeatures[var]], weights=signalDataset['weight'], histtype='step', density=True, bins=bins, label=options.sigName, linewidth=2)
+                plt.hist(bkgDataset[InputFeatures[var]], weights=bkgDataset['weight'], histtype='step', density=True, bins=bins, label=options.bkgName, linewidth=2)
+            
+            plt.xlabel(xLabel[var])
             plt.yscale('log')
+            if InputFeatures[var] == 'leading_jet_phi':
+                plt.yscale('linear')
             plt.legend(loc='best')
-            plt.savefig("Distributions/" + options.label + "/" + var + ".png")
-            plt.savefig("Distributions/" + options.label + "/" + var  + ".eps")
+            plt.savefig("Distributions/" + options.label + "/" + InputFeatures[var] + ".png")
+            plt.savefig("Distributions/" + options.label + "/" + InputFeatures[var]  + ".eps")
             plt.show()
             plt.clf()
+        
+        #plots with different binning
+
+        os.system('mkdir -p Distributions/' + options.label)
+        bins = np.linspace(0, 1.5*10**6, 30)
+        fig, ax = plt.subplots()
+        plt.hist(signalDataset['met_tst_et'], weights=signalDataset['weight'], histtype='step', density=True, bins=bins, label=options.sigName, linewidth=2)
+        plt.hist(bkgDataset['met_tst_et'], weights=bkgDataset['weight'], histtype='step', density=True, bins=bins, label=options.bkgName, linewidth=2)
+        
+        plt.xticks(ax.get_xticks(), ax.get_xticks()/1000)
+        plt.xlim(0, 1.5*10**6)
+        plt.xlabel('Missing transverse energy (GeV)')
+        plt.yscale('log')
+        plt.legend(loc='best')
+        plt.savefig("Distributions/" + options.label + "/" + 'met_tst_et1' + ".png")
+        plt.savefig("Distributions/" + options.label + "/" + 'met_tst_et1'  + ".eps")
+        plt.show()
+        plt.clf()
+
+        bins = np.linspace(0, 2*10**5, 30)
+        fig, ax = plt.subplots()
+        plt.hist(signalDataset['leading_jet_m'], weights=signalDataset['weight'], histtype='step', density=True, bins=bins, label=options.sigName, linewidth=2)
+        plt.hist(bkgDataset['leading_jet_m'], weights=bkgDataset['weight'], histtype='step', density=True, bins=bins, label=options.bkgName, linewidth=2)
+        
+        plt.xticks(ax.get_xticks(), ax.get_xticks()/1000)
+        plt.xlim(0, 2*10**5)
+        plt.xlabel('Leading jet mass (GeV)')
+        plt.yscale('log')
+        plt.legend(loc='best')
+        plt.savefig("Distributions/" + options.label + "/" + 'leading_jet_m1' + ".png")
+        plt.savefig("Distributions/" + options.label + "/" + 'leading_jet_m1'  + ".eps")
+        plt.show()
+        plt.clf()
 
     #==================================================================================
 
@@ -286,8 +366,8 @@ def DeepNeuralNetwork(options):
         # Define the train, test sets
         # We want the wskim with and without rescaling
         # We use the same random_seed so Xskim, yskim are the same in both lines
-        Xskim_train, Xskim_test, yskim_train, yskim_test, wskim_train, wskim_test = train_test_split(Xskim, yskim, wskim, train_size=options.train_size, test_size=(1-options.train_size),random_state=123)
-        Xskim_train2, Xskim_test2, yskim_train2, yskim_test2, wskim_rescaled_train, wskim_rescaled_test = train_test_split(Xskim, yskim, wskim_rescaled, train_size=options.train_size, test_size=(1-options.train_size),random_state=123)
+        Xskim_train, Xskim_test, yskim_train, yskim_test, wskim_train, wskim_test = train_test_split(Xskim, yskim, wskim, train_size=options.train_size, test_size=(0.99-options.train_size),random_state=123)
+        Xskim_train2, Xskim_test2, yskim_train2, yskim_test2, wskim_rescaled_train, wskim_rescaled_test = train_test_split(Xskim, yskim, wskim_rescaled, train_size=options.train_size, test_size=(0.99-options.train_size),random_state=123)
 
     #==================================================================================
 
@@ -300,8 +380,13 @@ def DeepNeuralNetwork(options):
         #Define the number of variables, the nodes per layer and the number of hidden layers
         n_dim=Xskim_train.shape[1]
         # n_nodes = int((n_dim+1)/2)
+# <<<<<<< HEAD
+#         n_nodes = 50
+#         n_depth = 3 #usually 1
+# =======
         n_nodes = options.nodes
         n_depth = options.depth
+# >>>>>>> 03d391376d7223261d9b07cd28a7546a6ff90eb3
 
         #Build the model aka the neural network
         model=BuildDNN(n_dim,n_nodes,n_depth)
@@ -311,8 +396,9 @@ def DeepNeuralNetwork(options):
         model.compile(loss='mean_squared_error',optimizer=adam,metrics=['accuracy'])
         # model.compile(loss='binary_crossentropy',optimizer=adam,metrics=['accuracy'])
 
-        #Define the stopping condition and where the model will be stored.
+        #Define the stopping condition and where the model will be stored. Use the above one in case you want EarlyStopping, the below one otherwise
         callbacks = [EarlyStopping(verbose=True, patience=options.patience, monitor='loss'), ModelCheckpoint('Models/' + options.label + 'model.h5', monitor='loss', verbose=True, save_best_only=True, mode='max')]
+        # callbacks = ModelCheckpoint('Models/' + options.label + 'model.h5', monitor='loss', verbose=True, save_best_only=True, mode='max')
 
     #==================================================================================
 
@@ -321,9 +407,9 @@ def DeepNeuralNetwork(options):
         print "Start training with a BATCH SIZE of {}".format(options.batch_size)
 
         if (options.use_weights):
-            modelMetricsHistoryskim = model.fit(Xskim_train, yskim_train, sample_weight = wskim_rescaled_train.values,epochs=EPOCHS,batch_size=options.batch_size,validation_split=0.0,callbacks=callbacks, verbose=0)
+            modelMetricsHistoryskim = model.fit(Xskim_train, yskim_train, sample_weight = wskim_rescaled_train.values,epochs=EPOCHS,batch_size=options.batch_size,validation_split=0.0,callbacks=callbacks, verbose=2)
         else:
-            modelMetricsHistoryskim = model.fit(Xskim_train, yskim_train, epochs=EPOCHS,batch_size=options.batch_size,validation_split=0.0,callbacks=callbacks, verbose=0)
+            modelMetricsHistoryskim = model.fit(Xskim_train, yskim_train, epochs=EPOCHS,batch_size=options.batch_size,validation_split=0.0,callbacks=callbacks, verbose=2)
 
         perf = model.evaluate(Xskim_test, yskim_test, batch_size=options.batch_size)
         saveModel(model,scaler,le,options.label)
@@ -340,13 +426,16 @@ def DeepNeuralNetwork(options):
 
     #==================================================================================
 
-    doROCCurve(options, model, Xskim_test, yskim_test)
+    AUC = doROCCurve(options, model, Xskim_test, yskim_test)
 
-    S_to_B = doDiscriminant(options,model,Xskim_test,yskim_test,wskim_test,Xskim_train,yskim_train,wskim_train)
+    S_to_B, S_to_sqrtB, S_to_B_norm, S_to_sqrtB_norm, S_to_sqrtB_nw, S_to_sqrtB_norm_nw = doDiscriminant(options,model,Xskim_test,yskim_test,wskim_test,Xskim_train,yskim_train,wskim_train)
 
     ###########################################################################
 
-    return {'S_to_B':S_to_B,'perf':perf}
+    print "=================================================================="
+    print "END"
+
+    return {'S_to_B':S_to_B,'perf':perf,'AUC':AUC,'S_to_sqrtB':S_to_sqrtB,'S_to_B_norm':S_to_B_norm,'S_to_sqrtB_norm':S_to_sqrtB_norm,'S_to_sqrtB_nw':S_to_sqrtB_nw,'S_to_sqrtB_norm_nw':S_to_sqrtB_norm_nw}
 
 
 
@@ -422,6 +511,8 @@ def doDiscriminant(options,model,Xskim_test,yskim_test,wskim_test,Xskim_train,ys
 
     S = sum(signal_wskim_test_reshaped[yhat_test_sig > T_cut])
     B = sum(bkg_wskim_test_reshaped[yhat_test_bkg > T_cut])
+    S_nw = int(sum(yhat_test_sig > T_cut)) # nw means no weights
+    B_nw = int(sum(yhat_test_bkg > T_cut)) # nw means no weights
 
     ################# Make the plots
 
@@ -437,6 +528,20 @@ def doDiscriminant(options,model,Xskim_test,yskim_test,wskim_test,Xskim_train,ys
     plt.yscale('log')
     plt.legend(loc='best')
     plt.xlabel('DNN score')
+    S_to_B = -1
+    S_to_sqrtB = -1
+    S_to_sqrtB_nw = -1
+    S_to_B_norm = -1
+    S_to_sqrtB_norm = -1
+    S_to_sqrtB_norm_nw = -1
+    if B > 0:
+        S_to_B = S/B
+        S_to_B_norm = S/(B*(len(yhat_test_sig)+len(yhat_test_bkg)))
+        S_to_sqrtB = S/m.sqrt(B)
+        S_to_sqrtB_norm = S/(m.sqrt(B)*(len(yhat_test_sig)+len(yhat_test_bkg)))
+        S_to_sqrtB_nw = S_nw/m.sqrt(B_nw)
+        S_to_sqrtB_norm_nw = S_nw/(m.sqrt(B_nw)*(len(yhat_test_sig)+len(yhat_test_bkg)))
+    plt.title(S_to_sqrtB_norm)
 
     os.system('mkdir -p Discriminant/' + options.label)
     plt.savefig("Discriminant/" + options.label + "/Discriminant.png")
@@ -448,18 +553,18 @@ def doDiscriminant(options,model,Xskim_test,yskim_test,wskim_test,Xskim_train,ys
 
     #########################################
     
-    S_to_B = -1
-    S_to_sqrtB = -1
-    if B > 0:
-        S_to_B = S/B
-        S_to_sqrtB = S/m.sqrt(B)
+    # S_to_B = -1
+    # S_to_sqrtB = -1
+    # if B > 0:
+    #     S_to_B = S/B
+    #     S_to_sqrtB = S/m.sqrt(B)
 
     print "================================================="
     print "The S/B is {}".format(S_to_B)
     print "The S/sqrt(B) is {}".format(S_to_sqrtB)
     print "S is {} and B is {}".format(S,B)
 
-    return S_to_B
+    return S_to_B, S_to_sqrtB, S_to_B_norm, S_to_sqrtB_norm, S_to_sqrtB_nw, S_to_sqrtB_norm_nw
 
 
 
@@ -470,9 +575,10 @@ def main(options):
     os.system('mkdir -p Datasets')
     os.system('mkdir -p Discriminant')
     os.system('mkdir -p Distributions')
+    os.system('mkdir -p Parameters')
     
 
-    f = open(options.file_name + ".dat","a+") # Append to file
+    
 
     if (options.label == ""):
         options.label = options.file_name
@@ -480,6 +586,7 @@ def main(options):
     S_to_Bs = []
     loss = []
     acc = []
+    print("Hello")
 
     bs_range = [options.BatchSizeStart]
     if options.BatchSizeEnd != -1 and options.BatchSizeStep != -1:
@@ -496,16 +603,36 @@ def main(options):
 
     for bs in bs_range:
         options.batch_size = bs
-        options.label = label + "_BS%s_epochs%d_nodes%d_depth%d_LR%dpm_trainSize%d" %(bs, options.epochs, options.nodes, options.depth, options.LR*1000, options.train_size*100)
+        LabelRandom = np.random.randint(1000)
+        options.label = label + "_BS%s_epochs%d_nodes%d_depth%d_LR%dpm_trainSize%d_Rand%d" %(bs, options.epochs, options.nodes, options.depth, options.LR*1000, options.train_size*100, LabelRandom)
         out = DeepNeuralNetwork(options)
+        AUC = out['AUC']
         S_to_B = out['S_to_B']
         perf = out['perf']
+        S_to_sqrtB = out['S_to_sqrtB']
+        S_to_B_norm = out['S_to_B_norm']
+        S_to_sqrtB_norm = out['S_to_sqrtB_norm']
+        S_to_sqrtB_nw = out['S_to_sqrtB_nw']
+        S_to_sqrtB_norm_nw = out['S_to_sqrtB_norm_nw']
         loss.append(perf[0])
         acc.append(perf[1])
         S_to_Bs.append(S_to_B)
+        f = open(options.file_name + ".dat","a+") # Append to file
         f.write("{}\t{}\t{}\t{}\n".format(bs,S_to_B,perf[0],perf[1]))
+        if options.param_file != "NoFile": # to ensure that no file will be opened if it's not specified
+            if os.path.exists('Parameters/' + options.param_file + '.txt'):
+                file1 = open("Parameters/" + options.param_file + ".txt", "a")
+            else:
+                file1 = open("Parameters/" + options.param_file + ".txt", "w")
+            file1.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(options.epochs, options.BatchSizeStart, options.train_size, options.LR, options.nodes, options.depth, S_to_B, S_to_B_norm, S_to_sqrtB, S_to_sqrtB_norm, S_to_sqrtB_nw, S_to_sqrtB_norm_nw, perf[0], perf[1], AUC))
 
     f.close()
 
+    if options.param_file != "NoFile":
+        file1.close()
+
 if __name__ == '__main__':
     main(options)
+else:
+    print "Not in main"
+

@@ -109,6 +109,8 @@ An example for running the code:
 
 	python CNN.py -s imgFiles_ZqqZvv_monoJet -b imgFiles_Znunu_280_500CVetoBVeto -l _test
 
+	python CNN.py -s invH -b Znunu -l _test
+
 This line would go to the path /nfs/pic.es/user/s/sgonzalez/scratch2/DL/Jet_images/run/output/ and use imgFiles_ZqqZvv_monoJet as the signal folder of the images and imgFiles_Znunu_280_500CVetoBVeto as the bkg folder. The -l gives the label to the output plots, in this case, _test.
 
 The channels for the images are divided as subfolders. For now we have pt and emf. The default is to use the pt channel.
@@ -116,4 +118,4 @@ The channels for the images are divided as subfolders. For now we have pt and em
 
 
 
-
+python MesProves.py -s Datasets/Whad_TAR.pkl -b Datasets/Znunu_TAR.pkl -l TEST -w --SigName Whad --BkgName Znunu --do-plots -f nothing -x 524 -e 100 --lr 0.01 --train-size 0.8
